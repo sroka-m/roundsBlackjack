@@ -11,9 +11,9 @@
       #form {
         height: 50px;
       }
-      /* #setInitialMoney {
+      #setInitialMoney {
         display: none;
-      } */
+      }
       #error {
         height: 40px;
         /* background-color: red; */
@@ -49,10 +49,16 @@
       const round = document.querySelector('button[id="round"]');
 
       newGame.addEventListener("click", reloadInitial, false);
+      newGame.addEventListener("click", displayForm, false);
 
       function reloadInitial() {
         reload();
+        console.log("hi");
         localStorage.clear();
+        console.log("hi");
+      }
+      function displayForm() {
+        formInitialMoney.style.display = "block";
       }
 
       function reload() {
