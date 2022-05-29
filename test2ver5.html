@@ -61,7 +61,7 @@
       setInitialInput();
       function setInitialInput() {
         round.removeEventListener("click", reload);
-        //first will try to finf out and repopulate the moeny, if its empty then allow for setting new
+        //first will try to find out and repopulate the money, if its empty then allow for setting new value for money
         if (localStorage.getItem("currentMoney") !== null) {
           console.log("there is sometihng in local storage");
           money = localStorage.getItem("currentMoney");
@@ -70,7 +70,6 @@
           console.log(money, typeof money);
           inputMoney.value = money;
           inputMoney.setAttribute("disabled", "disabled");
-          //unblock btnSubmit , take new bet,
         }
         formInitialMoney.addEventListener("submit", (e) => {
           e.preventDefault();
@@ -105,7 +104,7 @@
 
       function startgame() {
         //disalbe the sumbit button
-        btnSubmit.setAttribute("disabled", "disabled"); //can i do int insde the submit listner? i odnt think so, wont be sent?
+        btnSubmit.setAttribute("disabled", "disabled");
         console.log("hi i am starting game");
         let randNumber = Math.floor(Math.random() * 9) + 1;
         //the rules if i get num 1-4 i win, if i get 4-9 i loose, money-bet
@@ -124,17 +123,15 @@
         checkMoneyLeft();
       }
       function checkMoneyLeft() {
-        //7-8 needed for proper strategy in blackjack assuming smallers bet =1
+        //7-8 needed for proper strategy in blackjack assuming smallest bet =1
         if (money <= 8) {
           console.log("you lost: enought money to continue playing");
         } else {
-          //need to save the money to the local storage
-          //integer keys are uautomtically ocnverted to strings
+          //integer keys are automatically converted to strings
           saveInLocalStorage();
         }
 
         function saveInLocalStorage() {
-          //i tinhk i will clear local storage here too, after new round
           localStorage.clear();
           localStorage.setItem("currentMoney", money);
           console.log("do u want a new round?");
@@ -142,17 +139,9 @@
         }
       }
       function newRound() {
-        //reaload then get form storage
-
-        //repopulate the money
         //NOT  localStorage.clear();  if sonebosy clicks mutiple times the new round button??? so when correct bet input i tihnk
-
         round.addEventListener("click", reload);
       }
-      //i need to remove new round btn later somehwere
-      //disable bet somwhere
-
-      //reload in newRound() removes the disable restiction on btnsubmit and money input!!!!
     </script>
   </body>
 </html>
