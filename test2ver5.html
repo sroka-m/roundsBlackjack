@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      #form {
+        height: 50px;
+      }
+      /* #setInitialMoney {
+        display: none;
+      } */
+      #error {
+        height: 40px;
+        /* background-color: red; */
+      }
+    </style>
+    <div id="form">
+      <form id="setInitialMoney">
+        <label for="bet">Bet</label>
+        <input type="number" min="1" id="bet" />
+        <label for="money">Money:</label>
+        <input type="number" max="9999" min="1" id="money" />
+        <span>£</span>
+        <input type="submit" value="Go!" />
+      </form>
+    </div>
+    <div id="error"></div>
+    <hr />
+    <button id="reload">New game</button>
+    <button id="round">New round</button>
+
+    <script>
+      let bet;
+      let money;
+      let inputDispaly;
+      const inputMoney = document.querySelector('input[id="money"]');
+      const inputBet = document.querySelector('input[id="bet"]');
+      const formInitialMoney = document.querySelector(
+        'form[id="setInitialMoney"]'
+      );
+      const btnSubmit = document.querySelector('input[type="submit"]');
+      const errorElement = document.querySelector("#error");
+      const newGame = document.querySelector('button[id="reload"]');
+      const round = document.querySelector('button[id="round"]');
+
+      newGame.addEventListener("click", reloadInitial, false);
+
+      function reloadInitial() {
+        reload();
+        localStorage.clear();
+      }
+
+      function reload() {
+        reload = location.reload();
+      }
+      setInitialInput();
+      function setInitialInput() {
+        round.removeEventListener("click", reload);
+        //first will try to finf out and repopulate the moeny, if its empty then allow for setting new
+        if (localStorage.getItem("currentMoney") !== null) {
+          console.log("there is sometihng in local storage");
+          money = localStorage.getItem("currentMoney");
+          console.log(money, typeof money);
+          money = Number(money);
+          console.log(money, typeof money);
+          inputMoney.value = money;
+          inputMoney.setAttribute("disabled", "disabled");
+          //unblock btnSubmit , take new bet,
+        }
+        formInitialMoney.addEventListener("submit", (e) => {
+          e.preventDefault();
+          console.log(
+            "iam printing the money input field: " + inputMoney.value
+          );
+          let messages = "";
+          if (inputBet.value * 8 >= inputMoney.value) {
+            messages =
+              "To play proper strategy your bet needs to be 8 times smaller than your current money";
+          }
+          if (messages.length > 0) {
+            errorElement.innerHTML = messages;
+          }
+          if (messages.length == 0) {
+            console.log("i am happy");
+            bet = inputBet.value;
+            money = inputMoney.value;
+            //in the real game i will also disalbe the bet input, remving the submit listener
+            // would do that job, but disalbe makes visiallly obvious?
+            inputMoney.setAttribute("disabled", "disabled"); //tihs is repeated but i think it's ok
+            inputBet.setAttribute("disabled", "disabled");
+            console.log(bet, typeof bet);
+            console.log(money, typeof money);
+            bet = Number(bet);
+            money = Number(money);
+            console.log(bet, typeof bet, money, typeof money);
+            startgame();
+          }
+        });
+      }
+
+      function startgame() {
+        //disalbe the sumbit button
+        btnSubmit.setAttribute("disabled", "disabled"); //can i do int insde the submit listner? i odnt think so, wont be sent?
+        console.log("hi i am starting game");
+        let randNumber = Math.floor(Math.random() * 9) + 1;
+        //the rules if i get num 1-4 i win, if i get 4-9 i loose, money-bet
+        console.log(randNumber);
+        if (randNumber < 5) {
+          money += bet;
+          //update the money input field
+          inputMoney.value = money;
+          console.log("you won" + money);
+        } else if (randNumber >= 5) {
+          money -= bet;
+          //update the money input field
+          inputMoney.value = money;
+          console.log("you lose bet" + money);
+        }
+        checkMoneyLeft();
+      }
+      function checkMoneyLeft() {
+        //7-8 needed for proper strategy in blackjack assuming smallers bet =1
+        if (money <= 8) {
+          console.log("you lost: enought money to continue playing");
+        } else {
+          //need to save the money to the local storage
+          //integer keys are uautomtically ocnverted to strings
+          saveInLocalStorage();
+        }
+
+        function saveInLocalStorage() {
+          //i tinhk i will clear local storage here too, after new round
+          localStorage.clear();
+          localStorage.setItem("currentMoney", money);
+          console.log("do u want a new round?");
+          newRound();
+        }
+      }
+      function newRound() {
+        //reaload then get form storage
+
+        //repopulate the money
+        //NOT  localStorage.clear();  if sonebosy clicks mutiple times the new round button??? so when correct bet input i tihnk
+
+        round.addEventListener("click", reload);
+      }
+      //i need to remove new round btn later somehwere
+      //disable bet somwhere
+
+      //reload in newRound() removes the disable restiction on btnsubmit and money input!!!!
+    </script>
+  </body>
+</html>
