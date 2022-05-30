@@ -11,9 +11,9 @@
       #form {
         height: 50px;
       }
-      #setInitialMoney {
+      /* #setInitialMoney {
         display: none;
-      }
+      } */
       #error {
         height: 40px;
         /* background-color: red; */
@@ -49,16 +49,11 @@
       const round = document.querySelector('button[id="round"]');
 
       newGame.addEventListener("click", reloadInitial, false);
-      newGame.addEventListener("click", displayForm, false);
 
       function reloadInitial() {
         reload();
-        console.log("hi");
-        localStorage.clear();
-        console.log("hi");
-      }
-      function displayForm() {
-        formInitialMoney.style.display = "block";
+        sessionStorage.clear();
+        // formInitialMoney.style.display = "block";
       }
 
       function reload() {
@@ -68,9 +63,9 @@
       function setInitialInput() {
         round.removeEventListener("click", reload);
         //first will try to find out and repopulate the money, if its empty then allow for setting new value for money
-        if (localStorage.getItem("currentMoney") !== null) {
-          console.log("there is sometihng in local storage");
-          money = localStorage.getItem("currentMoney");
+        if (sessionStorage.getItem("currentMoney") !== null) {
+          console.log("there is sometihng in session storage");
+          money = sessionStorage.getItem("currentMoney");
           console.log(money, typeof money);
           money = Number(money);
           console.log(money, typeof money);
@@ -134,18 +129,18 @@
           console.log("you lost: enought money to continue playing");
         } else {
           //integer keys are automatically converted to strings
-          saveInLocalStorage();
+          saveInSessionStorage();
         }
 
-        function saveInLocalStorage() {
-          localStorage.clear();
-          localStorage.setItem("currentMoney", money);
+        function saveInSessionStorage() {
+          sessionStorage.clear();
+          sessionStorage.setItem("currentMoney", money);
           console.log("do u want a new round?");
           newRound();
         }
       }
       function newRound() {
-        //NOT  localStorage.clear();  if sonebosy clicks mutiple times the new round button??? so when correct bet input i tihnk
+        //NOT  sessionStorage.clear();  if sonebosy clicks mutiple times the new round button??? so when correct bet input i tihnk
         round.addEventListener("click", reload);
       }
     </script>
